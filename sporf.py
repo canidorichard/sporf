@@ -40,8 +40,8 @@ def main(args):
 
     # Append command to list
     cmdqueue.put(cmdline)
-  
-  # Process 
+
+  # Process
   process(args['num_processes'])
 
 
@@ -67,11 +67,17 @@ def thread_function():
       if args['test_only']:
         print(c)
       else:
-        p=subprocess.run(c,shell=True)
-        if not p.returncode == 0:
-            print("Return Code: " + str(p.returncode) + " - " + c, file=sys.stderr)
-   
+        # Use subprocess.call if Python version < 3.5
+        rc=0
+        if sys.version_info[0] < 5:
+            rc=subprocess.call(c,shell=True)
+        else:
+            p=subprocess.run(c,shell=True)
+            rc=p.returncode
+        if not rc == 0:
+            print("Return Code: " + str(rc) + " - " + c, file=sys.stderr)
+
 
 if __name__ == '__main__':
-  # Execute main method 
+  # Execute main method
   main(args)
