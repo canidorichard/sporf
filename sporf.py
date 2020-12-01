@@ -9,7 +9,9 @@ import argparse
 import glob
 import threading
 import subprocess
+import urllib.parse
 from queue import Queue
+from datetime import datetime
 
 # Define command line arguments
 parms=argparse.ArgumentParser()
@@ -25,6 +27,9 @@ cmdqueue=Queue()
 
 # Main processing
 def main(args):
+  # Get current date and time
+  timestamp = datetime.now()
+  
   # Open file of parameters to populate command template
   lines = open(args['path'] + "/" + args['file'], "r")
 
@@ -36,7 +41,9 @@ def main(args):
     # Build command to execute
     cmdline=args['cmd']
     for idx in range(len(parmlist)):
+      cmdline=cmdline.replace("{NOW}", timestamp.strftime('%Y%m%d-%H%M%S'))
       cmdline=cmdline.replace("{"+str(idx)+"}", parmlist[idx])
+      cmdline=cmdline.replace("{URL:"+str(idx)+"}", urllib.parse.quote(parmlist[idx]).replace("/","%2F"))
 
     # Append command to list
     cmdqueue.put(cmdline)
