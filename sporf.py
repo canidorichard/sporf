@@ -41,7 +41,7 @@ def main(args):
     # Build command to execute
     cmdline=args['cmd']
     for idx in range(len(parmlist)):
-      cmdline=cmdline.replace("{NOW}", timestamp.strftime('%Y%m%d-%H%M%S'))
+      cmdline=cmdline.replace("{NOW}", timestamp.strftime('%Y%m%d%H%M%S'))
       cmdline=cmdline.replace("{"+str(idx)+"}", parmlist[idx])
       cmdline=cmdline.replace("{URL:"+str(idx)+"}", urllib.parse.quote(parmlist[idx]).replace("/","%2F"))
 
